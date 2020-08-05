@@ -17,7 +17,7 @@ public class TimeTask {
     // 第几个索引
     private int index;
 
-    // 第几圈
+    // 第几圈 每转动一圈roundNum减一，等减少0的时候出队列执行任务
     private int roundNum;
 
     // 执行内容
