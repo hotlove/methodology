@@ -28,7 +28,12 @@ public class TimeWheel {
 
         // 15s一圈
         int roudNum = delay / BASE_SEC; // 获取第一几个坑
+
+        // 索引要从当游标往后
+
         int index = delay % BASE_SEC; // 获取第几圈
+
+
 
         timeTask.setIndex(index);
         timeTask.setRoundNum(roudNum);
