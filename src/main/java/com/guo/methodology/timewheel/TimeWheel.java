@@ -88,11 +88,11 @@ public class TimeWheel {
             TimeTask timeTask = bucketManager.head;
             while (timeTask.next != null) {
                 TimeTask task = timeTask.next;
+                if (task.getRoundNum() == 0) {
+                    System.out.println("任务执行--------------"+task.getContent());
+                }
                 // 每转一圈圈数减一 为0时执行任务
                 task.setRoundNum(task.getRoundNum() - 1);
-                if (task.getRoundNum() == 0) {
-                    System.out.println(task.getContent());
-                }
                 timeTask = task;
             }
         }
