@@ -11,6 +11,13 @@ public class BucketManager {
 
     protected TimeTask tail;
 
+    public BucketManager() {
+        head = new TimeTask();
+        tail = new TimeTask();
+
+        head.next = tail;
+        tail.prev = head;
+    }
     // 任务总数
     private int taskTotal;
 
