@@ -10,3 +10,8 @@ spring:
     url: jdbc:mysql://192.168.20.51:3306/spring-boot?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
     password: 123456
+logging:
+  level:
+    com:
+      guo:
+        methodology: trace
