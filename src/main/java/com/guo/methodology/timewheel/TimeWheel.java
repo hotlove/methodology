@@ -21,35 +21,19 @@ public class TimeWheel {
 
     ExecutorService workerPool = Executors.newFixedThreadPool(5);
 
-    private BucketManager[] arr = new BucketManager[15];
+    private final int BASE_SEC = 15;
+
+    private WheelBucket[] wheel = new WheelBucket[BASE_SEC];
 
     private int currentPos = 0;
 
-    private final int BASE_SEC = 15;
 
     private int totalSec = 0;
 
-    public void putTask(TimeTask timeTask) {
-        System.out.println("curpos------"+currentPos);
-        // 获取任务延迟秒数
-        int delay = timeTask.getDelay();
+    public void newDelayTask(long delay, TimerTask timerTask) {
+        long roundNum = (delay + currentPos) / BASE_SEC;
 
-        // 15s一圈
-//        int roudNum = 0;
-//        if (delay > BASE_SEC) {
-//            roudNum = delay / BASE_SEC; // 获取第几圈
-//        }
-
-        int roudNum = (delay + currentPos) / BASE_SEC;
-
-
-        // 索引要从当游标往后
-
-        // 判断是否大于base_sec
-        int index = (delay + currentPos) % BASE_SEC ;
-
-        System.out.println("roundNum-----------"+roudNum);
-        System.out.println("index-----------"+index);
+        long bucketIndex = (delay + currentPos) % BASE_SEC ;
 
         timeTask.setIndex(index);
         timeTask.setRoundNum(roudNum);
@@ -68,6 +52,26 @@ public class TimeWheel {
             timeTask.prev = bucketManager.tail.prev;
             bucketManager.tail.prev = timeTask;
         }
+    }
+
+    public void putTask(TimeTask timeTask) {
+        System.out.println("curpos------"+currentPos);
+        // 获取任务延迟秒数
+        int delay = timeTask.getDelay();
+
+
+
+
+
+        // 索引要从当游标往后
+
+        // 判断是否大于base_sec
+
+
+        System.out.println("roundNum-----------"+roudNum);
+        System.out.println("index-----------"+index);
+
+
     }
 
     public void start() {
