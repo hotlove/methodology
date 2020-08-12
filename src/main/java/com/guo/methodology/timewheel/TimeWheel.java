@@ -40,16 +40,13 @@ public class TimeWheel {
 //            roudNum = delay / BASE_SEC; // 获取第几圈
 //        }
 
-        int roudNum = delay / BASE_SEC;
+        int roudNum = (delay + currentPos) / BASE_SEC;
 
 
         // 索引要从当游标往后
 
         // 判断是否大于base_sec
-        int index = delay % BASE_SEC + currentPos;
-        if (index >= BASE_SEC) {
-            index = index - BASE_SEC;
-        }
+        int index = (delay + currentPos) % BASE_SEC ;
 
         System.out.println("roundNum-----------"+roudNum);
         System.out.println("index-----------"+index);

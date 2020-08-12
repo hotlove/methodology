@@ -48,10 +48,10 @@ class MethodologyApplicationTests {
         timeWheel.start();
 
         TimeTask timeTask = new TimeTask();
-        timeTask.setDelay(15);
+        timeTask.setDelay(17);
         timeTask.setContent("test");
 
-        TimeUnit.SECONDS.sleep(1);
+//        TimeUnit.SECONDS.sleep(1);
         timeWheel.putTask(timeTask);
 
         Thread.sleep(Integer.MAX_VALUE);
