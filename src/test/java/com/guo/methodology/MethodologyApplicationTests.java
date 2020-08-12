@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 class MethodologyApplicationTests {
@@ -24,7 +25,7 @@ class MethodologyApplicationTests {
 //        record.setDescription("鞋子");
 //        companyItemService.addCompanyItem(record);
         System.out.println(5%8);
-        System.out.println(23/8);
+        System.out.println(3/8);
     }
 
     @Test
@@ -33,8 +34,10 @@ class MethodologyApplicationTests {
         timeWheel.start();
 
         TimeTask timeTask = new TimeTask();
-        timeTask.setDelay(17);
+        timeTask.setDelay(15);
         timeTask.setContent("test");
+
+        TimeUnit.SECONDS.sleep(1);
         timeWheel.putTask(timeTask);
 
         Thread.sleep(Integer.MAX_VALUE);

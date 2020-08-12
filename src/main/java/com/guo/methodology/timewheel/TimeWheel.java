@@ -35,7 +35,13 @@ public class TimeWheel {
         int delay = timeTask.getDelay();
 
         // 15s一圈
-        int roudNum = delay / BASE_SEC; // 获取第几圈
+//        int roudNum = 0;
+//        if (delay > BASE_SEC) {
+//            roudNum = delay / BASE_SEC; // 获取第几圈
+//        }
+
+        int roudNum = delay / BASE_SEC;
+
 
         // 索引要从当游标往后
 
@@ -45,6 +51,8 @@ public class TimeWheel {
             index = index - BASE_SEC;
         }
 
+        System.out.println("roundNum-----------"+roudNum);
+        System.out.println("index-----------"+index);
 
         timeTask.setIndex(index);
         timeTask.setRoundNum(roudNum);
@@ -56,7 +64,6 @@ public class TimeWheel {
             timeTask.next = bucketManager1.tail;
             timeTask.prev = bucketManager1.tail.prev;
             bucketManager1.tail.prev = timeTask;
-            System.out.println("init index-----------"+index);
             arr[index] = bucketManager1;
         } else {
             bucketManager.tail.prev.next = timeTask;
@@ -81,13 +88,18 @@ public class TimeWheel {
     }
 
     private void handle(int index) {
-        System.out.println("index-------------"+index);
+        System.out.println("into index-------------"+index);
         BucketManager bucketManager = arr[index];
-        System.out.println("handle------------"+bucketManager);
         if (bucketManager != null) {
             TimeTask timeTask = bucketManager.head;
+
             while (timeTask.next != null) {
                 TimeTask task = timeTask.next;
+                if (task.getType() == 2) {
+                    // 如果是尾节点则直接跳出
+                    break;
+                }
+                System.out.println("execute roundnum---"+task.getRoundNum());
                 if (task.getRoundNum() == 0) {
                     System.out.println("任务执行--------------"+task.getContent());
                 }

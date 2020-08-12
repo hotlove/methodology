@@ -12,8 +12,8 @@ public class BucketManager {
     protected TimeTask tail;
 
     public BucketManager() {
-        head = new TimeTask();
-        tail = new TimeTask();
+        head = new TimeTask(1);
+        tail = new TimeTask(2);
 
         head.next = tail;
         tail.prev = head;

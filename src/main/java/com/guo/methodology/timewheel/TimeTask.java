@@ -12,6 +12,8 @@ public class TimeTask {
 
     protected TimeTask next;
 
+    private int type = 0; // 0普通任务 1头节点 2尾节点
+
     private int delay;
 
     // 第几个索引
@@ -22,6 +24,20 @@ public class TimeTask {
 
     // 执行内容
     private Object content;
+
+    public TimeTask() {};
+
+    public TimeTask(int type) {
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public Object getContent() {
         return content;
