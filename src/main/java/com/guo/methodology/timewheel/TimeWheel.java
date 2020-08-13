@@ -1,9 +1,5 @@
 package com.guo.methodology.timewheel;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
-import org.apache.tomcat.util.bcel.Const;
-
-import javax.sound.midi.Soundbank;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -21,7 +17,7 @@ public class TimeWheel {
 
     ExecutorService workerPool = Executors.newFixedThreadPool(5);
 
-    private final int BASE_SEC = 15;
+    private final int BASE_SEC = 8;
 
     private WheelBucket[] wheel = new WheelBucket[BASE_SEC];
 
@@ -30,48 +26,38 @@ public class TimeWheel {
 
     private int totalSec = 0;
 
-    public void newDelayTask(long delay, TimerTask timerTask) {
-        long roundNum = (delay + currentPos) / BASE_SEC;
-
-        long bucketIndex = (delay + currentPos) % BASE_SEC ;
-
-        timeTask.setIndex(index);
-        timeTask.setRoundNum(roudNum);
-
-        BucketManager bucketManager = arr[index];
-        if (bucketManager == null) {
-            BucketManager bucketManager1 = new BucketManager();
-            bucketManager1.tail.prev.next = timeTask;
-            timeTask.next = bucketManager1.tail;
-            timeTask.prev = bucketManager1.tail.prev;
-            bucketManager1.tail.prev = timeTask;
-            arr[index] = bucketManager1;
-        } else {
-            bucketManager.tail.prev.next = timeTask;
-            timeTask.next = bucketManager.tail;
-            timeTask.prev = bucketManager.tail.prev;
-            bucketManager.tail.prev = timeTask;
+    public void newDelayTask(int delay, AbstractTimerTask timerTask) {
+        // 圈数
+        int roundNum = (delay + currentPos) / BASE_SEC;
+        // 桶索引
+        int bucketIndex = (delay + currentPos) % BASE_SEC ;
+        if (bucketIndex == currentPos) {
+            // 如果一圈后还是当前位置（延迟基数秒），就减减
+            roundNum--;
         }
-    }
 
-    public void putTask(TimeTask timeTask) {
-        System.out.println("curpos------"+currentPos);
-        // 获取任务延迟秒数
-        int delay = timeTask.getDelay();
+        System.out.println("roundNum--------------"+roundNum);
+        System.out.println("bucketIndex-----------"+bucketIndex);
 
+        BucketTask bucketTask = new BucketTask();
+        bucketTask.setBucketIndex(bucketIndex);
+        bucketTask.setRoundNum(roundNum);
+        bucketTask.setTimerTask(timerTask);
 
-
-
-
-        // 索引要从当游标往后
-
-        // 判断是否大于base_sec
-
-
-        System.out.println("roundNum-----------"+roudNum);
-        System.out.println("index-----------"+index);
-
-
+        WheelBucket wheelBucket = wheel[bucketIndex];
+        if (wheelBucket == null) {
+            WheelBucket newWheelBucket = new WheelBucket();
+            newWheelBucket.tail.prev.next = bucketTask;
+            bucketTask.next = newWheelBucket.tail;
+            bucketTask.prev = newWheelBucket.tail.prev;
+            newWheelBucket.tail.prev = bucketTask;
+            wheel[bucketIndex] = newWheelBucket;
+        } else {
+            wheelBucket.tail.prev.next = bucketTask;
+            bucketTask.next = wheelBucket.tail;
+            bucketTask.prev = wheelBucket.tail.prev;
+            wheelBucket.tail.prev = bucketTask;
+        }
     }
 
     public void start() {
@@ -79,7 +65,7 @@ public class TimeWheel {
             currentPos++;
             totalSec++;
             System.out.println("sec:----------"+totalSec);
-            if (currentPos >= 15) {
+            if (currentPos == BASE_SEC) {
                 currentPos = 0;
             }
             workerPool.execute(() -> {
@@ -90,19 +76,19 @@ public class TimeWheel {
 
     private void handle(int index) {
         System.out.println("into index-------------"+index);
-        BucketManager bucketManager = arr[index];
-        if (bucketManager != null) {
-            TimeTask timeTask = bucketManager.head;
+        WheelBucket wheelBucket = wheel[index];
+        if (wheelBucket != null) {
+            BucketTask timeTask = wheelBucket.head;
 
             while (timeTask.next != null) {
-                TimeTask task = timeTask.next;
+                BucketTask task = timeTask.next;
                 if (task.getType() == 2) {
                     // 如果是尾节点则直接跳出
                     break;
                 }
                 System.out.println("execute roundnum---"+task.getRoundNum());
                 if (task.getRoundNum() == 0) {
-                    System.out.println("任务执行--------------"+task.getContent());
+                    task.getTimerTask().execute();
                 }
                 // 每转一圈圈数减一 为0时执行任务
                 task.setRoundNum(task.getRoundNum() - 1);

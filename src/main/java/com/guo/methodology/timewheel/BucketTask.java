@@ -17,7 +17,7 @@ public class BucketTask {
 
     private int type; // 0普通任务 1头节点 2尾节点
 
-    private TimerTask timerTask;
+    private AbstractTimerTask timerTask;
 
     public BucketTask() {}
 
@@ -48,11 +48,11 @@ public class BucketTask {
         this.type = type;
     }
 
-    public TimerTask getTimerTask() {
+    public AbstractTimerTask getTimerTask() {
         return timerTask;
     }
 
-    public void setTimerTask(TimerTask timerTask) {
+    public void setTimerTask(AbstractTimerTask timerTask) {
         this.timerTask = timerTask;
     }
 }

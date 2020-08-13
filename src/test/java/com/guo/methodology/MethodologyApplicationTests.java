@@ -1,8 +1,8 @@
 package com.guo.methodology;
 
-import com.guo.methodology.domain.CompanyItem;
 import com.guo.methodology.service.CompanyItemService;
-import com.guo.methodology.timewheel.TimeTask;
+import com.guo.methodology.timewheel.AbstractTimerTask;
+import com.guo.methodology.timewheel.DelayTimerTask;
 import com.guo.methodology.timewheel.TimeWheel;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
@@ -46,13 +45,12 @@ class MethodologyApplicationTests {
     void testTimeWheel() throws InterruptedException {
         TimeWheel timeWheel = new TimeWheel();
         timeWheel.start();
-
-        TimeTask timeTask = new TimeTask();
-        timeTask.setDelay(17);
-        timeTask.setContent("test");
-
-//        TimeUnit.SECONDS.sleep(1);
-        timeWheel.putTask(timeTask);
+        timeWheel.newDelayTask(16, new AbstractTimerTask() {
+            @Override
+            public void execute() {
+                System.out.println("测试得-------------");
+            }
+        });
 
         Thread.sleep(Integer.MAX_VALUE);
     }
