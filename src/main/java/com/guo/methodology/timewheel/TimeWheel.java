@@ -55,6 +55,7 @@ public class TimeWheel {
         } else {
             wheelBucket.tail.prev.next = bucketTask;
             bucketTask.next = wheelBucket.tail;
+
             bucketTask.prev = wheelBucket.tail.prev;
             wheelBucket.tail.prev = bucketTask;
         }
